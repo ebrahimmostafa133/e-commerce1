@@ -1,0 +1,81 @@
+<div class="relative mb-4">
+
+  @if (element==='input') {
+    <input
+      [ngClass]="{
+      'border-gray-300 dark:border-gray-600': !controlTouched,
+      'border-green-600 focus:border-green-600 border-2': controlValid && controlTouched,
+      'border-red-600 focus:border-red-600 focus:ring-red-500 border': controlInvalid && controlTouched
+      }"
+      [formControl]="asFormControl()"
+      [type]="getInputType()"
+      [id]="idInput"
+      placeholder=" "
+      class="peer block w-full rounded-xl px-3 pt-6 pb-2 text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:border-green-600 focus:ring-2 focus:ring-green-500 focus:outline-none" 
+    />
+  }
+  @else if (element==='textarea') {
+    <textarea
+      [ngClass]="{
+      'border-gray-300 dark:border-gray-600': !controlTouched,
+      'border-green-600 focus:border-green-600 border-2': controlValid && controlTouched,
+      'border-red-600 focus:border-red-600 focus:ring-red-500 border': controlInvalid && controlTouched
+      }"
+      [formControl]="asFormControl()"
+      [id]="idInput"
+      placeholder=" "
+      class="peer block w-full rounded-xl px-3 pt-6 pb-2 text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:border-green-600 focus:ring-2 focus:ring-green-500 focus:outline-none" 
+    ></textarea>
+  }
+
+  <label
+    [ngClass]="{
+    'text-gray-500': !controlTouched,
+    'text-green-600': controlValid && controlTouched,
+    'text-red-600': controlInvalid && controlTouched
+    }"
+    [for]="idInput"
+    class="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-sm peer-focus:text-green-600">{{ labelInput }}</label>
+ 
+
+  <!-- Eye Toggle -->
+  <button
+    *ngIf="togglePassword"
+    type="button"
+    (click)="show = !show"
+    class="absolute top-4 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 cursor-pointer"
+  >
+    <i class="fas" [ngClass]="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+  </button>
+
+  <!-- Error Messages -->
+  <div
+    *ngIf="controlErrors && controlTouched"
+    class="flex p-3 mt-2 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+  >
+    <svg class="w-4 h-4 me-2 mt-[2px]" fill="currentColor" viewBox="0 0 20 20">
+      <path
+        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51
+        9.51 0 0 0 10 .5ZM9.5 4a1.5
+        1.5 0 1 1 0 3 1.5 1.5 0 0 1
+        0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1
+        1 0 0 1 0-2h2a1 1 0 0 1 1
+        1v4h1a1 1 0 0 1 0 2Z"
+      />
+    </svg>
+    <ul class="list-none list-inside">
+      <li *ngIf="hasError('required')">{{ labelInput }} is required</li>
+      <li *ngIf="hasError('minlength')">Must be at least {{ controlErrors?.['minlength']?.requiredLength }} characters</li>
+      <li *ngIf="hasError('maxlength')">Must be at most {{ controlErrors?.['maxlength']?.requiredLength }} characters</li>
+      <li *ngIf="hasError('email')">Invalid email format</li>
+      <li *ngIf="hasError('pattern')">
+        <ng-container [ngSwitch]="idInput">
+          <span *ngSwitchCase="'password'">Must include uppercase, lowercase, number & special char</span>
+          <span *ngSwitchCase="'phone'">Must be a valid Egypt phone (11 digits, starts with 01)</span>
+          <span *ngSwitchDefault>Invalid format</span>
+        </ng-container>
+      </li>
+      <li *ngIf="hasError('noMatch')">Passwords do not match</li>
+    </ul>
+  </div>
+</div>

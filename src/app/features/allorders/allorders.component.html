@@ -1,0 +1,209 @@
+<!-- components/all-orders/all-orders.component.html -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
+      <div class="text-center sm:text-left">
+        <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent py-5">
+          My Orders
+        </h1>
+        <p class="text-gray-600 ">Track and manage all your purchases</p>
+      </div>
+      <a 
+        routerLink="/products" 
+        class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2"
+      >
+        <i class="fas fa-shopping-cart"></i>
+        Continue Shopping
+      </a>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-green-600 border-t-transparent mx-auto mb-4"></div>
+      <p class="text-gray-600 text-lg font-medium">Loading your orders...</p>
+      <p class="text-gray-400 mt-1">Please wait while we fetch your purchase history</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg shadow-md mb-8">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <i class="fas fa-exclamation-circle text-red-500 text-2xl"></i>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-red-800 font-semibold text-lg">Oops! Something went wrong</h3>
+          <p class="text-red-600 mt-1">{{ error }}</p>
+          <button 
+            (click)="loadUserOrders()" 
+            class="mt-4 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+          >
+            <i class="fas fa-redo"></i>
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders List -->
+    <div *ngIf="orders.length > 0 && !isLoading" class="space-y-8">
+      <div 
+        *ngFor="let order of orders.slice().reverse()" 
+        class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      >
+        <!-- Order Header -->
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b border-gray-200">
+          <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="w-3 h-3 rounded-full" [ngClass]="{
+                  'bg-green-500': order.isDelivered,
+                  'bg-blue-500': order.isPaid && !order.isDelivered,
+                  'bg-yellow-500': !order.isPaid
+                }"></div>
+                <h3 class="text-2xl font-bold text-gray-800">Order #{{ order.id }}</h3>
+              </div>
+              <p class="text-gray-500 flex items-center gap-2">
+                <i class="fas fa-calendar-alt text-sm"></i>
+                Placed on {{ order.createdAt | date:'fullDate' }} at {{ order.createdAt | date:'shortTime' }}
+              </p>
+            </div>
+            <div class="flex items-center gap-6">
+              <span class="px-4 py-2 rounded-full text-sm font-semibold shadow-sm" [ngClass]="getStatusClass(order)">
+                {{ getOrderStatus(order) }}
+              </span>
+              <span class="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                {{ order.totalOrderPrice | currency:'GBP' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Body -->
+        <div class="p-8">
+          <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+            <!-- Shipping Address -->
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-green-600"></i>
+                Shipping Address
+              </h4>
+              <div class="space-y-2 text-gray-700">
+                <p class="flex items-center gap-2">
+                  <i class="fas fa-location-dot text-sm text-gray-400"></i>
+                  {{ order.shippingAddress.details }}
+                </p>
+                <p class="flex items-center gap-2">
+                  <i class="fas fa-city text-sm text-gray-400"></i>
+                  {{ order.shippingAddress.city }}
+                </p>
+                <p class="flex items-center gap-2">
+                  <i class="fas fa-phone text-sm text-gray-400"></i>
+                  {{ order.shippingAddress.phone }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-credit-card text-blue-600"></i>
+                Payment Information
+              </h4>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <i [ngClass]="getPaymentMethodIcon(order.paymentMethodType)" class="text-2xl text-blue-600"></i>
+                  <span class="font-medium text-gray-700">{{ getPaymentMethodText(order.paymentMethodType) }}</span>
+                </div>
+                <p class="flex items-center gap-2" [ngClass]="{'text-green-600': order.isPaid, 'text-orange-600': !order.isPaid}">
+                  <i class="fas" [ngClass]="order.isPaid ? 'fa-check-circle' : 'fa-clock'"></i>
+                  {{ order.isPaid ? 'Payment Completed' : 'Payment Pending' }}
+                </p>
+                <p *ngIf="order.paidAt" class="text-sm text-gray-500 flex items-center gap-2">
+                  <i class="fas fa-calendar-check"></i>
+                  Paid on {{ order.paidAt | date:'medium' }}
+                </p>
+                <div class="flex gap-4 text-sm text-gray-600 mt-3">
+                  <span class="bg-white px-3 py-1 rounded-full shadow-sm">
+                    Shipping: {{ order.shippingPrice | currency:'GBP' }}
+                  </span>
+                  <span class="bg-white px-3 py-1 rounded-full shadow-sm">
+                    Tax: {{ order.taxPrice | currency:'GBP' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Items -->
+          <div class="mb-8">
+            <h4 class="font-semibold text-gray-800 mb-6 flex items-center gap-2">
+              <i class="fas fa-shopping-basket text-purple-600"></i>
+              Order Items ({{ getTotalItems(order) }})
+            </h4>
+            <div class="space-y-4">
+              <div 
+                *ngFor="let item of order.cartItems" 
+                class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200"
+              >
+                <div class="flex items-center gap-4 flex-1">
+                  <img 
+                    [src]="item.product.imageCover" 
+                    [alt]="item.product.title"
+                    class="w-16 h-16 rounded-xl object-cover border-2 border-white shadow-md"
+                    onerror="this.src='https://via.placeholder.com/64?text=No+Image'"
+                  >
+                  <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-gray-800  sm:max-w-[200px]">{{ item.product.title }}</p>
+                    <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                      <span class="bg-white px-2 py-1 rounded-md shadow-sm">Qty: {{ item.count }}</span>
+                      <span class="flex items-center gap-1">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        {{ item.product.ratingsAverage }}/5
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <span class="font-bold text-green-600 text-lg">
+                  {{ (item.price * item.count) | currency:'GBP' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-100">
+            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+              <div class="space-y-2 text-gray-700">
+                <p class="text-sm">Items total: {{ order.totalOrderPrice - order.shippingPrice - order.taxPrice | currency:'GBP' }}</p>
+                <p class="text-sm">Shipping: {{ order.shippingPrice | currency:'GBP' }}</p>
+                <p class="text-sm">Tax: {{ order.taxPrice | currency:'GBP' }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                  Total: {{ order.totalOrderPrice | currency:'GBP' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="orders.length === 0 && !isLoading && !error" class="text-center py-20 bg-white rounded-2xl shadow-lg">
+      <div class="w-24 h-24 bg-gradient-to-r from-green-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-box-open text-4xl text-green-600"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">No orders yet</h2>
+      <p class="text-gray-600 mb-8 max-w-md mx-auto">You haven't placed any orders yet. Start shopping to see your orders here!</p>
+      <a 
+        routerLink="/products" 
+        class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2"
+      >
+        <i class="fas fa-shopping-bag"></i>
+        Start Shopping
+      </a>
+    </div>
+  </div>
+</div>

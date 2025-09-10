@@ -1,0 +1,126 @@
+<section class="bg-gray-100 p-6 my-14">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading your cart...</p>
+    </div>
+
+    <!-- Content when loaded -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Checkout Form -->
+      <div class="lg:col-span-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+        <h1 class="text-center text-4xl my-8 text-green-500 font-bold">CheckOut</h1>
+        
+        <form [formGroup]="checkoutForm">
+          <app-input
+            [control]="getControl('shippingAddress.details')"
+            [typeInput]="'text'"
+            [idInput]="'details'"
+            [labelInput]="'Address Details'"
+          ></app-input>
+
+          <app-input
+            [control]="getControl('shippingAddress.phone')"
+            [typeInput]="'text'"
+            [idInput]="'phone'"
+            [labelInput]="'Phone'"
+          ></app-input>
+
+          <app-input
+            [control]="getControl('shippingAddress.city')"
+            [typeInput]="'text'"
+            [idInput]="'city'"
+            [labelInput]="'City'"
+          ></app-input>
+
+          <!-- Payment Buttons -->
+          <div class="flex gap-4 mt-8">
+            <!-- Cash Payment Button -->
+            <button
+              type="button"
+              (click)="payWithCash()"
+              class="flex-1 flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-blue-600 px-4 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="!hasProducts() || isProcessingVisa"
+            >
+              <i class="fas fa-money-bill-wave"></i>
+              Pay with Cash
+            </button>
+
+            <!-- Visa Payment Button -->
+            <button
+              type="button"
+              (click)="payWithVisa()"
+              class="flex-1 flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-yellow-600 px-4 py-3 text-white font-semibold hover:bg-yellow-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="!hasProducts() || isProcessingVisa"
+            >
+              <i class="fab fa-cc-visa"></i>
+              {{ isProcessingVisa ? 'Processing...' : 'Pay with Visa' }}
+            </button>
+          </div>
+        </form>
+        
+        <!-- back to the cart page -->
+        <div class="text-center mt-7">
+          <a routerLink="/cart" class="text-green-500 text-xl font-semibold hover:text-green-700 inline-block">
+            &larr; Back to Cart
+          </a>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-xl border border-gray-100 sticky top-5">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Order Summary</h2>
+        
+        <!-- Empty Cart Message -->
+        <div *ngIf="!hasProducts()" class="text-center py-8">
+          <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4"></i>
+          <p class="text-gray-600">Your cart is empty</p>
+          <a routerLink="/products" class="text-green-600 hover:text-green-700 mt-2 inline-block">
+            Continue Shopping
+          </a>
+        </div>
+
+        <!-- Cart Items -->
+        <div *ngIf="hasProducts()">
+          <!-- Cart Items List -->
+          <div class="space-y-3 mb-4 max-h-60 overflow-y-auto">
+            <div *ngFor="let product of cartData.products" class="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+              <div class="flex-1">
+                <span class="font-medium text-gray-800">{{ product.count }}x </span>
+                <span class="text-gray-600">{{ product.product.title }}</span>
+              </div>
+              <span class="font-medium text-green-600">{{ (product.price * product.count) | currency:'GBP' }}</span>
+            </div>
+          </div>
+
+          <!-- Order Totals -->
+          <div class="space-y-2 border-t border-gray-200 pt-4">
+            <div class="flex justify-between text-gray-600">
+              <span>Items ({{ getTotalItems() }}):</span>
+              <span>{{ calculateSubtotal() | currency:'GBP' }}</span>
+            </div>
+            <div class="border-t border-gray-200 pt-2 mt-2">
+              <div class="flex justify-between font-semibold text-lg">
+                <span>Total:</span>
+                <span class="text-green-600">
+                  {{ calculateSubtotal() | currency:'GBP' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Original API Total (for reference)
+          <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+            <div class="flex justify-between text-sm text-gray-500">
+              <span>API Total:</span>
+              <span>{{ cartData.totalCartPrice | currency:'GBP' }}</span>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
