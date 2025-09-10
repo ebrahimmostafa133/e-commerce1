@@ -24,6 +24,18 @@ export class AuthService {
     return this.httpClient.post(environment.baseUrl + 'auth/signin', data);
   }
 
+  submitVerifyEmail(data: object): Observable<any> {
+    return this.httpClient.post(environment.baseUrl + 'auth/forgotPasswords', data);
+  }
+
+  submitVerifyCode(data: object): Observable<any> {
+    return this.httpClient.post(environment.baseUrl + 'auth/verifyResetCode', data);
+  }
+
+  submitResetPassword(data: object): Observable<any> {
+    return this.httpClient.put(environment.baseUrl + 'auth/resetPassword', data);
+  }
+
 
   logout():void {
     this.cookieService.delete('token');
