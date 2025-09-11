@@ -1,0 +1,80 @@
+<section class="container mx-auto py-10 px-4">
+  <h2 class="text-3xl font-bold text-center text-green-600 mb-8">My Profile</h2>
+
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- Update Profile Data -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-xl font-semibold mb-4">Update My Data</h3>
+      <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+        
+        <app-input
+          [control]="profileForm.get('name')"
+          idInput="name"
+          typeInput="text"
+          labelInput="Name"
+          element="input">
+        </app-input>
+
+        <app-input
+          [control]="profileForm.get('email')"
+          idInput="email"
+          typeInput="email"
+          labelInput="Email"
+          element="input">
+        </app-input>
+
+        <app-input
+          [control]="profileForm.get('phone')"
+          idInput="phone"
+          typeInput="text"
+          labelInput="Phone"
+          element="input">
+        </app-input>
+
+        <button type="submit"
+          class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition cursor-pointer">
+          Update Data
+        </button>
+      </form>
+    </div>
+
+    <!-- Change Password -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-xl font-semibold mb-4">Change Password</h3>
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+
+        <app-input
+          [control]="passwordForm.get('currentPassword')"
+          idInput="currentPassword"
+          typeInput="password"
+          labelInput="Current Password"
+          element="input"
+          [togglePassword]="true">
+        </app-input>
+
+        <app-input
+          [control]="passwordForm.get('password')"
+          idInput="password"
+          typeInput="password"
+          labelInput="New Password"
+          element="input"
+          [togglePassword]="true">
+        </app-input>
+
+        <app-input
+          [control]="passwordForm.get('rePassword')"
+          idInput="rePassword"
+          typeInput="password"
+          labelInput="Confirm Password"
+          element="input"
+          [togglePassword]="true">
+        </app-input>
+
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition cursor-pointer">
+          Change Password
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

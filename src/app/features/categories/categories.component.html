@@ -1,1 +1,29 @@
-<p>categories works!</p>
+<section class="pb-14 pt-7">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl text-green-600 text-center font-bold mb-10">
+      Categories
+    </h2>
+
+    <div
+      class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      @for (category of categoriesList; track category._id) {
+        <div
+        [routerLink]="['/categories', category._id]"
+          class="group/card border-2 cursor-pointer  border-green-300 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-green-500 transition-all duration-500"
+        >
+          <div class="overflow-hidden">
+            <img
+                class="w-full h-64 object-cover group-hover/card:scale-105 transition-transform duration-500"
+                src="{{ category.image }}"
+                alt="{{ category.name }}"
+              />
+          </div>
+          <h3 class="text-lg font-semibold mt-3 mb-4 text-center text-gray-800">
+            {{ category.name }}
+          </h3>
+        </div>
+      }
+    </div>
+  </div>
+</section>
