@@ -15,6 +15,9 @@ import { authGuard } from './core/guards/auth-guard';
 import { isLoggedGuard } from './core/guards/is-logged-guard';
 import { AllOrdersComponent } from './features/allorders/allorders.component';
 import { ForgetPasswordComponent } from './core/auth/forget-password/forget-password.component';
+import { CategoryProductsComponent } from './features/categories/categoryproducts/categoryproducts.component';
+import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
       {path:'',redirectTo:'home',pathMatch:'full'},
@@ -31,13 +34,16 @@ export const routes: Routes = [
             children: [
                   {path:'home',component:HomeComponent,title:'Home Page'},
                   {path:'cart',component:CartComponent,title:'Cart Page'},
+                  {path:'wishlist',component:WishlistComponent,title:'WishList Page'},
                   {path:'brands',component:BrandsComponent,title:'Brands Page'},
                   {path:'details/:id/:slug',component:DetailsComponent,title:'Details Page'},
                   {path:'details/:id',component:DetailsComponent,title:'Details Page'},
                   {path:'allorders',component:AllOrdersComponent,title:'All Orders Page'},
                   {path:'products',component:ProductsComponent,title:'Products Page'},
                   {path:'categories',component:CategoriesComponent,title:'Categories Page'},
-                  {path:'checkout/:id',component:CheckoutComponent,title:'Checkout Page'}
+                  {path:'categories/:id', component: CategoryProductsComponent, title: 'Category Products Page' },
+                  {path:'checkout/:id',component:CheckoutComponent,title:'Checkout Page'},
+                  {path:'profile',component:ProfileComponent,title:'Profile Page'},
 
             ]
       },

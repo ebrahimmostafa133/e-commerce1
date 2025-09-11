@@ -6,6 +6,7 @@ import { TermPipe } from '../../pipes/term-pipe';
 import { CartService } from '../../../features/cart/services/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { CurrencyPipe } from '@angular/common';
+import { WishlistService } from '../../../features/wishlist/services/wishlist.service';
 
 @Component({
   selector: 'app-card',
@@ -19,8 +20,11 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class CardComponent {
   @Input({required: true}) product : Product ={} as Product;
+
   private readonly cartService = inject(CartService);
   private readonly toasterServices = inject(ToastrService);
+  private readonly wishlistService = inject(WishlistService);
+  
 
   addProductItemToCart(id: string): void {
     this.cartService.addProductToCart(id).subscribe({
@@ -34,6 +38,13 @@ export class CardComponent {
         console.error('Error adding product to cart:', err);
         this.toasterServices.error('Error adding product to cart');
       }
+    });
+  }
+
+  addProductItemToWishlist(id: string) {
+    this.wishlistService.addProductToWishlist(id).subscribe({
+      next: () => this.toasterServices.success("Product added to wishlist", "Wishlist"),
+      error: (err) => console.error(err)
     });
   }
 

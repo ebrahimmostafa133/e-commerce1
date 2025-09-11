@@ -3,7 +3,7 @@
 
       <div class="relative cursor-pointer overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
 
-            <div [routerLink]="['/details', product.id, product.slug]" class="card-img group-hover/card:scale-110 cursor-pointer transition-all duration-700 ease-out">
+            <div [routerLink]="['/details', product._id, product.slug]" class="card-img group-hover/card:scale-110 cursor-pointer transition-all duration-700 ease-out">
             <img src="{{ product.imageCover }}" alt="{{ product.title }}"
                    class="w-full  object-cover object-center transition-all duration-700" />
             </div>
@@ -13,11 +13,13 @@
       
 
     <button
+      (click)="addProductItemToWishlist(product._id)"
       class="absolute cursor-pointer top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full text-green-500 
-             hover:bg-red-50 hover:text-red-500 transition-all duration-300 flex items-center justify-center 
-             shadow-md hover:shadow-lg transform hover:scale-110">
+            hover:bg-red-50 hover:text-red-500 transition-all duration-300 flex items-center justify-center 
+            shadow-md hover:shadow-lg transform hover:scale-110">
       <i class="fas fa-heart text-sm"></i>
     </button>
+
 
     <div class="px-4 pt-4 pb-3">
       <h4 class="text-emerald-600 text-xs font-medium tracking-wide">{{ product.category.name | term:2 }}</h4>

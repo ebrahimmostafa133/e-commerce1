@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { CartService } from '../../../features/cart/services/cart.service';
 import { Cart } from '../../../features/cart/models/cart.interface';
+import { WishlistService } from '../../../features/wishlist/services/wishlist.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,8 +19,12 @@ export class NavbarComponent {
 
   private readonly authService = new AuthService();
   private readonly cartService = inject(CartService);
+  private readonly wishlistService = inject(WishlistService);
+
 
   count: number = 0;
+  wishlistCount: number = 0;
+
 
   ngOnInit(): void {
     this.flowbiteService.loadFlowbite(() => {
@@ -28,11 +33,29 @@ export class NavbarComponent {
 
     if (this.isLogin) {
       this.cartService.getLoggedUserCart().subscribe();
+      // this.wishlistService.getLoggedUserWishlist().subscribe();
+      this.wishlistService.getLoggedUserWishlist().subscribe({
+      next: (res) => {
+        this.wishlistCount = res.count;
+      },
+      error: (err) => console.error(err)
+    });
 
       this.cartService.cart$.subscribe((cart: Cart | null) => {
         this.count = cart ? cart.products.length : 0;
       });
+
+      this.wishlistService.wishlist$.subscribe((data) => {
+      if (data) {
+        this.wishlistCount = data.length ?? 0;
+      }
+    });
     }
+
+
+
+
+
   }
 
   

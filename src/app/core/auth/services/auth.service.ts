@@ -36,6 +36,13 @@ export class AuthService {
     return this.httpClient.put(environment.baseUrl + 'auth/resetPassword', data);
   }
 
+  updateUserData(data: object): Observable<any> {
+    return this.httpClient.put(environment.baseUrl + 'users/updateMe', data);
+  }
+
+  updateUserPassword(data: object): Observable<any> {
+    return this.httpClient.put(environment.baseUrl + 'users/changeMyPassword', data);
+  }
 
   logout():void {
     this.cookieService.delete('token');
