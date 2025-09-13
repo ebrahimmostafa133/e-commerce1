@@ -1,52 +1,70 @@
-<section
-  class="p-8 my-8 bg-gray-100 border border-gray-900 shadow-2xl rounded-2xl w-full sm:w-4/5 md:w-2/3 lg:w-1/2 text-center mx-auto"
->
-  <h1 class="text-4xl font-extrabold mb-8 tracking-wide">Login</h1>
-
-  <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-
-    <!-- Email -->
-    <app-input
-      [control]="getControl('email')"
-      idInput="email"
-      labelInput="Email"
-      typeInput="email">
-    </app-input>
-
-    <!-- Password -->
-    <app-input
-      [control]="getControl('password')"
-      idInput="password"
-      labelInput="Password"
-      typeInput="password"
-      [togglePassword]="true">
-    </app-input>
-
-    <!-- Forgot password -->
-    <div class="text-right mt-2">
-      <a routerLink="/forget" class="text-md text-green-600 cursor-pointer hover:underline">
-        Forgot password?
-      </a>
-    </div>
-
-    <!-- Submit -->
-    <button  type="submit"
-      class="mt-5 w-full btn bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-colors">
+<section class="p-8  bg-gray-100 dark:bg-gray-900 transition-colors duration-500 ease-in-out">
+  <div
+    class="border my-8 border-gray-300 dark:border-gray-700 dark:text-white
+           shadow-2xl rounded-2xl w-full sm:w-4/5 md:w-2/3 lg:w-1/2 
+           text-center mx-auto p-8"
+  >
+    <!-- Title -->
+    <h1 class="text-4xl font-extrabold mb-8 tracking-wide text-gray-900 dark:text-white">
       Login
-      @if (isLoading) {
-        <span><i class="fa fa-spinner animate-spin text-white"></i></span>
+    </h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="space-y-4">
+      <!-- Email -->
+      <app-input
+        [control]="getControl('email')"
+        idInput="email"
+        labelInput="Email"
+        typeInput="email">
+      </app-input>
+
+      <!-- Password -->
+      <app-input
+        [control]="getControl('password')"
+        idInput="password"
+        labelInput="Password"
+        typeInput="password"
+        [togglePassword]="true">
+      </app-input>
+
+      <!-- Forgot password -->
+      <div class="text-right mt-2">
+        <a routerLink="/forget"
+           class="text-md text-green-600 dark:text-green-400 cursor-pointer hover:underline">
+          Forgot password?
+        </a>
+      </div>
+
+      <!-- Submit -->
+      <button  
+        type="submit"
+        class="mt-5 w-full bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed 
+               text-white text-lg font-semibold py-3 rounded-xl 
+               hover:bg-green-700 dark:hover:bg-green-500 transition-colors duration-300 shadow"
+      >
+        Login
+        @if (isLoading) {
+          <span><i class="fa fa-spinner animate-spin text-white"></i></span>
+        }
+      </button>
+
+      <!-- Error Message -->
+      @if (msg) {
+        <p class="p-2 text-center rounded-2xl font-semibold 
+                  text-red-900 dark:text-red-200 
+                  bg-red-200 dark:bg-red-900/40 transition-colors">
+          {{ msg }}
+        </p>
       }
-    </button>
 
-    @if (msg) {
-      <p class="p-2 text-center rounded-2xl font-semibold  text-red-900 bg-red-200">{{ msg }}</p>
-    }
-    <p class="mt-6 text-sm text-gray-600">
-      Don’t have an account?
-      <a routerLink="/register" class="font-bold text-green-600 hover:underline">
-        Register
-      </a>
-    </p>
-
-  </form>
+      <!-- Register Link -->
+      <p class="mt-6 text-sm text-gray-600 dark:text-gray-300">
+        Don’t have an account?
+        <a routerLink="/register"
+           class="font-bold text-green-600 dark:text-green-400 hover:underline">
+          Register
+        </a>
+      </p>
+    </form>
+  </div>
 </section>

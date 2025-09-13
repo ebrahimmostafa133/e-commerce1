@@ -1,18 +1,21 @@
-<section class="pb-14 pt-7">
+<section class="pb-14 pt-7 bg-white dark:bg-gray-900 transition-colors duration-500">
   <div class="container mx-auto px-4">
-    <h2 class="text-4xl text-green-600 text-center font-bold mb-10">
+    <h2
+      class="text-4xl text-green-600 dark:text-green-400 text-center font-bold mb-10"
+    >
       {{ categoryName || 'Category' }} Products
     </h2>
 
     <div class="grid gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       @for (product of productsList; track product._id) {
         <div
-          class="border-2 border-green-700 rounded-xl overflow-hidden shadow relative group/card 
-                 hover:border-green-500 hover:border-4 hover:shadow-lg transition-all duration-200"
+          class="border-2 border-green-700 dark:border-green-600 rounded-xl overflow-hidden shadow relative group/card 
+                 hover:border-green-500 dark:hover:border-green-400 hover:border-4 hover:shadow-lg transition-all duration-200
+                 bg-white dark:bg-gray-800"
         >
           <!-- Image -->
           <div
-            class="relative cursor-pointer overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100"
+            class="relative cursor-pointer overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700"
           >
             <div
               [routerLink]="['/details', product._id, product.slug]"
@@ -28,9 +31,13 @@
 
           <!-- Favorite button -->
           <button
-          (click)="addProductItemToWishlist(product._id)"
-            class="absolute cursor-pointer top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full text-green-500 
-                   hover:bg-red-50 hover:text-red-500 transition-all duration-300 flex items-center justify-center 
+            (click)="addProductItemToWishlist(product._id)"
+            class="absolute cursor-pointer top-3 right-3 w-10 h-10 
+                   bg-white/90 dark:bg-gray-700/80 backdrop-blur-sm 
+                   rounded-full text-green-500 dark:text-green-400 
+                   hover:bg-red-50 dark:hover:bg-red-900/40 
+                   hover:text-red-500 dark:hover:text-red-400 
+                   transition-all duration-300 flex items-center justify-center 
                    shadow-md hover:shadow-lg transform hover:scale-110"
           >
             <i class="fas fa-heart text-sm"></i>
@@ -39,12 +46,13 @@
           <!-- Info -->
           <div class="px-4 pt-4 pb-3">
             <h4
-              class="text-emerald-600 text-xs font-medium tracking-wide"
+              class="text-emerald-600 dark:text-emerald-400 text-xs font-medium tracking-wide"
             >
               {{ product.category.name | term: 2 }}
             </h4>
             <h3
-              class="font-bold text-gray-800 text-lg line-clamp-1 group-hover:text-emerald-700 transition-colors duration-300"
+              class="font-bold text-gray-800 dark:text-gray-100 text-lg line-clamp-1 
+                     group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-300"
             >
               {{ product.title | term: 3 }}
             </h3>
@@ -52,13 +60,15 @@
             <div class="flex justify-between items-center pt-2">
               <div class="flex items-center space-x-1 text-yellow-400">
                 <i class="fas fa-star text-sm"></i>
-                <span class="text-gray-600 text-sm font-medium">
+                <span class="text-gray-600 dark:text-gray-300 text-sm font-medium">
                   {{ product.ratingsAverage }}
                 </span>
               </div>
               <div class="flex items-baseline space-x-1">
                 <span
-                  class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent"
+                  class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 
+                         dark:from-emerald-400 dark:to-green-400 
+                         bg-clip-text text-transparent"
                 >
                   {{ product.price | currency: 'GBP' }}
                 </span>
@@ -71,9 +81,13 @@
             <button
               (click)="addProductItemToCart(product._id)"
               class="w-full bg-gradient-to-r cursor-pointer from-emerald-500 to-green-600 
-                     hover:from-emerald-600 hover:to-green-700 text-white font-bold 
-                     py-3 px-6 rounded-xl transition-all duration-500 transform 
-                     translate-y-[120%] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 
+                     hover:from-emerald-600 hover:to-green-700 
+                     dark:from-emerald-400 dark:to-green-500 
+                     hover:dark:from-emerald-500 hover:dark:to-green-600 
+                     text-white font-bold py-3 px-6 rounded-xl 
+                     transition-all duration-500 transform 
+                     translate-y-[120%] opacity-0 
+                     group-hover/card:translate-y-0 group-hover/card:opacity-100 
                      hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] 
                      flex items-center justify-center space-x-2 space-x-reverse"
             >
@@ -88,11 +102,10 @@
     <!-- Empty State -->
     @if (productsList.length===0) {
       <div
-      
-      class="text-center text-gray-600 my-30 text-2xl font-semibold"
-    >
-      No products found in this category.
-    </div>
+        class="text-center text-gray-600 dark:text-gray-300 my-30 text-2xl font-semibold"
+      >
+        No products found in this category.
+      </div>
     }
   </div>
 </section>

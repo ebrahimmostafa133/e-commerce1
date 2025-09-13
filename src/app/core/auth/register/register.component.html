@@ -1,72 +1,91 @@
-<section
-  class="p-8 my-8 bg-gray-100 border border-gray-900 shadow-2xl rounded-2xl w-full sm:w-4/5 md:w-2/3 lg:w-1/2 text-center mx-auto"
->
-  <h1 class="text-4xl font-extrabold mb-8 tracking-wide">Register Now</h1>
+<section class="p-8  bg-gray-100 dark:bg-gray-900 transition-colors duration-500 ease-in-out">
+  <div
+    class=" 
+           border my-4 border-gray-300 dark:border-gray-700 dark:text-white
+           shadow-2xl rounded-2xl w-full sm:w-4/5 md:w-2/3 lg:w-1/2 
+           text-center mx-auto p-8"
+  >
+    <!-- Title -->
+    <h1 class="text-4xl font-extrabold mb-8 tracking-wide text-gray-900 dark:text-white">
+      Register Now
+    </h1>
 
-  <form [formGroup]="registerForm" (ngSubmit)="submitForm()" >
+    <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="space-y-4">
+      
+      <!-- Name -->
+      <app-input 
+        [control]="getControl('name')"
+        idInput="name"
+        labelInput="Name"
+        typeInput="text">
+      </app-input>
 
-    <!-- Name -->
-    <app-input 
-      [control]="getControl('name')"
-      idInput="name"
-      labelInput="Name"
-      typeInput="text">
-    </app-input>
+      <!-- Email -->
+      <app-input
+        [control]="getControl('email')"
+        idInput="email"
+        labelInput="Email"
+        typeInput="email">
+      </app-input>
 
-    <!-- Email -->
-    <app-input
-      [control]="getControl('email')"
-      idInput="email"
-      labelInput="Email"
-      typeInput="email">
-    </app-input>
+      <!-- Password -->
+      <app-input
+        [control]="getControl('password')"
+        idInput="password"
+        labelInput="Password"
+        typeInput="password"
+        [togglePassword]="true">
+      </app-input>
 
-    <!-- Password -->
-    <app-input
-      [control]="getControl('password')"
-      idInput="password"
-      labelInput="Password"
-      typeInput="password"
-      [togglePassword]="true">
-    </app-input>
+      <!-- Confirm Password -->
+      <app-input
+        [control]="getControl('rePassword')"
+        idInput="rePassword"
+        labelInput="Confirm Password"
+        typeInput="password"
+        [togglePassword]="true">
+      </app-input>
 
-    <!-- Confirm Password -->
-    <app-input
-      [control]="getControl('rePassword')"
-      idInput="rePassword"
-      labelInput="Confirm Password"
-      typeInput="password"
-      [togglePassword]="true">
-    </app-input>
+      <!-- Phone -->
+      <app-input
+        [control]="getControl('phone')"
+        idInput="phone"
+        labelInput="Phone"
+        typeInput="tel">
+      </app-input>
 
-    <!-- Phone -->
-    <app-input
-      [control]="getControl('phone')"
-      idInput="phone"
-      labelInput="Phone"
-      typeInput="tel">
-    </app-input>
+      <!-- Submit -->
+      <button  
+        type="submit"
+        class="mt-8 w-full bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed 
+               text-white text-lg font-semibold py-3 rounded-xl 
+               hover:bg-green-700 dark:hover:bg-green-500 
+               transition-colors duration-300 shadow"
+      >
+        Register
+        @if (isLoading) {
+          <span><i class="fa fa-spinner animate-spin text-white"></i></span>
+        }
+      </button>
 
-
-    <!-- Submit -->
-    <button  type="submit"
-      class="mt-8 w-full btn bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-lg font-semibold py-3 rounded-xl hover:bg-green-700 transition-colors">
-      Register
-      @if (isLoading) {
-        <span><i class="fa fa-spinner animate-spin text-white"></i></span>
+      <!-- Error Message -->
+      @if (msg) {
+        <p class="p-2 text-center rounded-2xl font-semibold 
+                  text-red-900 dark:text-red-200 
+                  bg-red-200 dark:bg-red-900/40 transition-colors">
+          {{ msg }}
+        </p>
       }
-    </button>
 
-    @if (msg) {
-      <p class="p-2 text-center rounded-2xl font-semibold  text-red-900 bg-red-200">{{ msg }}</p>
-    }
-    <p class="mt-6 text-sm text-gray-600">
-      Already have an account?
-      <a routerLink="/login" class="font-bold text-green-600 hover:underline">
-        Login
-      </a>
-    </p>
+      <!-- Login Link -->
+      <p class="mt-6 text-sm text-gray-600 dark:text-gray-300">
+        Already have an account?
+        <a routerLink="/login" 
+           class="font-bold text-green-600 dark:text-green-400 hover:underline">
+          Login
+        </a>
+      </p>
 
-
-  </form>
+    </form>
+  </div>
 </section>
