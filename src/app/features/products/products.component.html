@@ -23,9 +23,7 @@
       </div>
   </div>
 
-  <pagination-controls  
-      id="foo" 
-      class="mt-4 items-center justify-center flex my-pagination 
-             dark:text-gray-200 dark:fill-gray-200">    
+  <pagination-controls  id="foo" class="mt-4 items-center justify-center flex my-pagination"
+      (pageChange)="getAllProductsData($event)">    
   </pagination-controls>
 </section>
