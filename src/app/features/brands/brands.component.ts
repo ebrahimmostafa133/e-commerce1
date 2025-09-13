@@ -38,10 +38,10 @@ export class BrandsComponent implements OnInit {
     });
   }
 
-  count: WritableSignal<number>=signal(0);
-  updateCount():void{
-    this.count.update((value)=>value+1);
-  }
+  // count: WritableSignal<number>=signal(0);
+  // updateCount():void{
+  //   this.count.update((value)=>value+1);
+  // }
 
 
 
