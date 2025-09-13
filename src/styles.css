@@ -55,3 +55,7 @@ body {
 .btn-main:hover {
   background-color: #11bd11;
 }
+
+button{
+  cursor: pointer;
+}
