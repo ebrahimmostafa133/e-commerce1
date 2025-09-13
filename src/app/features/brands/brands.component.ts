@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Brand } from '../../core/models/brand.interface';
 import { BrandsService } from './services/brand.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -37,4 +37,12 @@ export class BrandsComponent implements OnInit {
       error: (err) => console.error(err)
     });
   }
+
+  count: WritableSignal<number>=signal(0);
+  updateCount():void{
+    this.count.update((value)=>value+1);
+  }
+
+
+
 }
