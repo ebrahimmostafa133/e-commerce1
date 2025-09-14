@@ -49,11 +49,12 @@ export class CartService {
 
 
   checkOutSession(id: string, data: object): Observable<any> {
-    return this.httpClient.post(
-      environment.baseUrl + "orders/checkout-session/" + id + "?url=http://localhost:4200",
-      data
-    );
-  }
+  return this.httpClient.post(
+    environment.baseUrl + "orders/checkout-session/" + id + "?url=" + window.location.origin,
+    data
+  );
+}
+
 
   checkOutCash(id: string, data: object): Observable<any> {
     return this.httpClient.post(
