@@ -63,4 +63,10 @@ export class AuthService {
     }
   }
 
+  getUserDataById(id: string): Observable<any> {
+  return this.httpClient.get(environment.baseUrl + 'users/' + id);
+}
+
+
+
 }

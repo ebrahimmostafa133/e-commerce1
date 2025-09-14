@@ -4,6 +4,7 @@ import { AuthService } from '../../core/auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { InputComponent } from '../../shared/components/input/input.component'; // ✅ adjust path if needed
+import { decode } from 'punycode';
 
 @Component({
   selector: 'app-profile',
@@ -27,13 +28,15 @@ export class ProfileComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
+  userData: any; // to hold current user profile
+
   ngOnInit(): void {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [
         Validators.required,
-        Validators.pattern(/^01[0-9]{9}$/) // ✅ Egypt phone pattern
+        Validators.pattern(/^01[0-9]{9}$/)
       ]],
     });
 
@@ -42,7 +45,25 @@ export class ProfileComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       rePassword: ['', Validators.required],
     }, { validators: this.passwordMatchValidator });
+
+    // ✅ decode token to get id
+    const decoded = this.authService.decodeToken();
+    if (decoded?.id) {
+      this.authService.getUserDataById(decoded.id).subscribe({
+        next: (res) => {
+          this.userData = res.data;                
+          this.profileForm.patchValue(res.data);  
+        },
+
+        error: () => {
+          this.toastr.error('Failed to load profile data');
+        }
+      });
+    }
   }
+
+
+
 
   // ✅ custom validator for matching passwords
   passwordMatchValidator(form: FormGroup) {
@@ -52,17 +73,37 @@ export class ProfileComponent implements OnInit {
   }
 
   onUpdateProfile(): void {
-    if (this.profileForm.invalid) return;
+  // collect only dirty and non-empty fields
+  const updatedData: any = {};
+  Object.keys(this.profileForm.controls).forEach(key => {
+    const control = this.profileForm.get(key);
+    if (control?.dirty && control.value?.trim() !== '') {
+      updatedData[key] = control.value;
+    }
+  });
 
-    this.authService.updateUserData(this.profileForm.value).subscribe({
-      next: () => {
-        this.toastr.success('Profile updated successfully');
-      },
-      error: (err) => {
-        this.toastr.error(err.error.message || 'Failed to update profile');
-      },
-    });
+  if (Object.keys(updatedData).length === 0) {
+    this.toastr.info('No changes detected');
+    return;
   }
+
+  this.authService.updateUserData(updatedData).subscribe({
+    next: () => {
+      this.toastr.success('Profile updated successfully');
+
+      // ✅ update local userData so HTML reflects changes
+      this.userData = { ...this.userData, ...updatedData };
+
+      this.profileForm.markAsPristine();
+    },
+    error: (err) => {
+      this.toastr.error(err.error.message || 'Failed to update profile');
+    },
+  });
+}
+
+
+
 
   onChangePassword(): void {
     if (this.passwordForm.invalid) return;
